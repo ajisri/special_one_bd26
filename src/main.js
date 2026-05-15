@@ -486,11 +486,7 @@ function initFinale() {
   .to(messageLines, {
     opacity: 1, y: 0, 
     duration: 1, ease: 'power3.out', stagger: 0.15
-  }, '-=0.4')
-  .to('.finale__divider', {
-    scaleX: 1, transformOrigin: 'left', 
-    duration: 0.8, ease: 'power4.inOut',
-  }, '-=0.5');
+  }, '-=0.4');
 
   ScrollTrigger.create({
     trigger: '#sc-finale',
