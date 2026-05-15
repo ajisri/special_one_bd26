@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AYU</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital,wght@1,900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body>
+
+  <!-- CURSOR -->
+  <div id="cursor"></div>
+  <div id="cursorDot"></div>
+
+  <!-- NOISE CANVAS -->
+  <canvas id="noiseCanvas"></canvas>
+
+  <!-- STICKY NAV -->
+  <nav id="stickyNav">
+    <div class="nav__inner">
+      <div class="nav__logo">AYU</div>
+      <div class="nav__links">
+        <button class="nav__link" data-target="sc-ignition">Hero</button>
+        <button class="nav__link" data-target="sc-finale">Penutup</button>
+      </div>
+      <div class="nav__badge">
+        <span class="nav__dot"></span>
+        <span class="nav__badge-text">Untuk Kamu</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- GLOBAL MARQUEE -->
+  <div class="g-marquee" id="gMarquee">
+    <div class="g-marquee__track" id="gMarqueeTrack">
+      <span>AYU &bull; 2026 &bull; AYU &bull; 2026 &bull; AYU &bull; 2026 &bull; AYU &bull; 2026 &bull; AYU &bull; 2026
+        &bull; </span>
+      <span>AYU &bull; 2026 &bull; AYU &bull; 2026 &bull; AYU &bull; 2026 &bull; AYU &bull; 2026 &bull; AYU &bull; 2026
+        &bull; </span>
+    </div>
+  </div>
+
+  <!-- MAIN SCROLL CONTAINER -->
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+
+      <!-- ─────────────────────────────────────────── -->
+      <!-- SCENE 00 — IGNITION / HERO                 -->
+      <!-- ─────────────────────────────────────────── -->
+      <section class="sc" id="sc-ignition" data-scene="00">
+        <!-- 3D Perspective container -->
+        <div class="ignition__perspective">
+          <div class="sc__bg" style="background:#0A0A0A" id="ignitBg"></div>
+
+          <!-- EDITORIAL NOSTALGIC BRUTALISM OVERLAYS -->
+          <div class="hero-frame"></div>
+
+          <div class="specimen-tag">
+            <span class="specimen-tag__title">PHALAENOPSIS AMABILIS</span>
+          </div>
+
+          <div class="poetic-quote">
+            "An honest beauty, unrefined by time."
+          </div>
+
+          <!-- Swiss grid lines -->
+          <div class="ignition__grid-lines" aria-hidden="true" id="ignitGrid">
+            <div class="igl igl--1"></div>
+            <div class="igl igl--2"></div>
+            <div class="igl igl--3"></div>
+            <div class="igl igl--h"></div>
+          </div>
+
+          <!-- Parallax layer: background label -->
+          <div class="ignition__overline" id="ignitOverline">ARSIP WAKTU / 2026</div>
+
+          <!-- ORCHID BACK LAYER -->
+          <div class="hero-orchid hero-orchid--back" id="heroOrchidBack">
+            <svg id="heroOrchidBackSvg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMax meet" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <g id="orchidFlowerBack">
+                  <!-- Sharp Geometric Sepals -->
+                  <path d="M0,0 L-20,-45 L20,-45 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1" />
+                  <path d="M0,0 L-40,20 L-25,50 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1" />
+                  <path d="M0,0 L40,20 L25,50 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1" />
+                  <!-- Sharp Geometric Petals -->
+                  <path d="M0,0 L-55,-15 L-55,25 L-10,10 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1" />
+                  <path d="M0,0 L55,-15 L55,25 L10,10 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1" />
+                  <!-- Rust Veins & Blueprint Accents -->
+                  <circle cx="-25" cy="-10" r="1.5" fill="#C0533B" />
+                  <circle cx="25" cy="-10" r="1.5" fill="#C0533B" />
+                  <path d="M-15,-30 L-5,-10" stroke="#C0533B" stroke-width="0.5" />
+                  <path d="M15,-30 L5,-10" stroke="#C0533B" stroke-width="0.5" />
+                  <!-- Mechanical Labellum -->
+                  <path d="M-12,5 L0,25 L12,5 L0,0 Z" fill="#1A1A18" stroke="#C0533B" stroke-width="1.5" />
+                  <rect x="-3" y="10" width="6" height="6" fill="#4A6B7C" />
+                </g>
+                <g id="smallOrchidBack">
+                  <path d="M0,0 L-15,-30 L15,-30 Z" fill="#EAE6DA" />
+                  <path d="M0,0 L-30,10 L-30,30 L0,0 Z" fill="#C0533B" />
+                  <path d="M0,0 L30,10 L30,30 L0,0 Z" fill="#C0533B" />
+                </g>
+              </defs>
+              <!-- Dinamis di main.js -->
+            </svg>
+          </div>
+
+          <!-- ORCHID MID LAYER (Behind Text, In front of Back) -->
+          <div class="hero-orchid hero-orchid--mid" id="heroOrchidMid">
+            <svg id="heroOrchidMidSvg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMax meet" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <!-- Dinamis di main.js -->
+            </svg>
+          </div>
+
+          <!-- Main name -->
+          <div class="ignition__center">
+            <div class="ignition__name-wrap" id="ignitNameWrap">
+              <h1 class="ignition__ayu" id="ignitAyu">AYU</h1>
+            </div>
+            <p class="ignition__sub" id="ignitSub">love</p>
+          </div>
+
+          <!-- ORCHID FRONT LAYER -->
+          <div class="hero-orchid hero-orchid--front" id="heroOrchidFront">
+            <svg id="heroOrchidFrontSvg" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMax meet" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <g id="orchidFlowerFront">
+                  <!-- Sharp Geometric Sepals -->
+                  <path d="M0,0 L-22,-50 L22,-50 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1.2" />
+                  <path d="M0,0 L-45,20 L-30,55 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1.2" />
+                  <path d="M0,0 L45,20 L30,55 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1.2" />
+                  <!-- Sharp Geometric Petals -->
+                  <path d="M0,0 L-60,-20 L-60,30 L-12,12 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1.2" />
+                  <path d="M0,0 L60,-20 L60,30 L12,12 Z" fill="#EAE6DA" stroke="#1A1A18" stroke-width="1.2" />
+                  <!-- Rust Veins & Blueprint Accents -->
+                  <circle cx="-30" cy="-15" r="2" fill="#C0533B" />
+                  <circle cx="30" cy="-15" r="2" fill="#C0533B" />
+                  <!-- Mechanical Labellum -->
+                  <path d="M-15,6 L0,30 L15,6 L0,0 Z" fill="#1A1A18" stroke="#C0533B" stroke-width="2" />
+                  <rect x="-4" y="12" width="8" height="8" fill="#4A6B7C" />
+                </g>
+                <g id="smallOrchidFront">
+                  <path d="M0,0 L-18,-35 L18,-35 Z" fill="#EAE6DA" />
+                  <path d="M0,0 L-35,15 L-35,35 L0,0 Z" fill="#4A6B7C" />
+                  <path d="M0,0 L35,15 L35,35 L0,0 Z" fill="#4A6B7C" />
+                </g>
+              </defs>
+              <!-- Dinamis di main.js -->
+            </svg>
+          </div>
+
+          <div class="ignition__scroll-hint" id="scrollHint">
+            <span>SCROLL</span>
+            <div class="ignition__arrow"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────────────────────────────────────── -->
+      <!-- SCENE 01 — FINALE (HBD)                     -->
+      <!-- ─────────────────────────────────────────── -->
+      <section class="sc" id="sc-finale" data-scene="01">
+        <div class="finale__grid" aria-hidden="true"></div>
+        <div class="sc__bg" style="background:var(--C-PAPER)"></div>
+        <canvas class="finale__canvas" id="finaleCanvas"></canvas>
+
+        <!-- Orchid SVG in HBD section (Stays as is or subtle update) -->
+        <div class="orchid-wrap" id="orchidWrap" aria-hidden="true">
+          <svg id="orchidSvg" viewBox="0 0 200 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Simplified sharp orchid for finale -->
+            <path d="M100 310 L100 150" stroke="var(--C-INK)" stroke-width="3" />
+            <g transform="translate(100,150)">
+              <use href="#orchidFlowerFront" scale="0.4" fill="var(--C-RUST)" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="finale__content">
+          <div class="finale__hbd" id="finaleHBD">
+            <span>H</span>
+            <span>B</span>
+            <span>D</span>
+          </div>
+          <div class="finale__name" id="finaleName">AYU</div>
+          <div class="finale__divider"></div>
+        </div>
+
+        <div class="finale__bottom-bar">
+          <div class="finale__tag">FILE_REF: 26.05.AYU</div>
+          <div class="finale__tag">ARCHIVE_COMPLETE // 2026</div>
+        </div>
+      </section>
+
+    </div><!-- /smooth-content -->
+  </div><!-- /smooth-wrapper -->
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
