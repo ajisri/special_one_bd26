@@ -262,16 +262,18 @@ function initHeroOrchid() {
     const group = document.createElementNS(svgNS, "g");
     group.setAttribute("class", "ho-plant");
     
+    const isMobile = window.innerWidth < 768;
     const startX = forcedX !== null ? forcedX : Math.random() * 1000;
     const startY = 980;
-    const height = 450 + Math.random() * 450; 
+    const baseHeight = isMobile ? 650 : 450;
+    const height = baseHeight + Math.random() * (isMobile ? 300 : 450); 
     const endY = startY - height;
     
     let controlX;
     if (forcedX !== null && type === 'front') {
       controlX = forcedX + (index % 2 === 0 ? 120 : -120); 
     } else {
-      controlX = startX + (Math.random() - 0.5) * 400;
+      controlX = startX + (Math.random() - 0.5) * (isMobile ? 250 : 400);
     }
     
     const endX = startX + (Math.random() - 0.5) * 150;
@@ -469,10 +471,11 @@ function initIgnition() {
 /* ─────────────────────────────────────────────────────── */
 function initFinale() {
   const hbdSpan = document.querySelectorAll('.finale__hbd span');
+  const messageLines = document.querySelectorAll('.finale__message p');
+  
   gsap.set(hbdSpan, { y: '110%', rotateX: -60, opacity: 0 });
-  gsap.set('#finaleName', { y: 50, opacity: 0, filter: 'blur(10px)' });
+  gsap.set(messageLines, { y: 30, opacity: 0 });
   gsap.set('.finale__divider', { scaleX: 0 });
-  gsap.set('#finaleClose', { opacity: 0, y: 20 });
 
   const tl = gsap.timeline({ paused: true });
 
@@ -480,14 +483,14 @@ function initFinale() {
     y: 0, rotateX: 0, opacity: 1, 
     duration: 1.2, ease: 'expo.out', stagger: 0.1,
   })
-  .to('#finaleName', { 
-    opacity: 1, y: 0, filter: 'blur(0px)',
-    duration: 1, ease: 'back.out(2)' 
-  }, '-=0.6')
+  .to(messageLines, {
+    opacity: 1, y: 0, 
+    duration: 1, ease: 'power3.out', stagger: 0.15
+  }, '-=0.4')
   .to('.finale__divider', {
     scaleX: 1, transformOrigin: 'left', 
     duration: 0.8, ease: 'power4.inOut',
-  }, '-=0.4');
+  }, '-=0.5');
 
   ScrollTrigger.create({
     trigger: '#sc-finale',
@@ -514,10 +517,11 @@ function initFinale() {
       duration: 1, ease: 'power2.out', stagger: 0.05,
     });
 
-    gsap.to('#finaleName', {
-      x: -rx * 60,
-      y: -ry * 30,
-      duration: 1.5, ease: 'power3.out'
+    gsap.to(messageLines, {
+      x: -rx * 30,
+      y: -ry * 15,
+      duration: 1.8, ease: 'power4.out',
+      stagger: 0.02
     });
   });
 }
@@ -526,6 +530,8 @@ function initFinale() {
 /* FINALE PARTICLES                                        */
 /* ─────────────────────────────────────────────────────── */
 let finaleStarted = false;
+let mouse = { x: -1000, y: -1000 };
+
 function initFinaleCanvas() {
   if (finaleStarted) return;
   finaleStarted = true;
@@ -533,48 +539,131 @@ function initFinaleCanvas() {
   const canvas = document.getElementById('finaleCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
+  const section = document.getElementById('sc-finale');
 
-  canvas.width  = canvas.offsetWidth;
-  canvas.height = canvas.offsetHeight;
+  function resize() {
+    canvas.width = section.offsetWidth;
+    canvas.height = section.offsetHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
 
-  const COLORS = ['#1A1A18', '#C0533B', '#4A6B7C', '#EAE6DA'];
+  section.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
 
-  class BrutalParticle {
-    constructor() { this.reset(true); }
-    reset(initial = false) {
-      this.x = canvas.width * Math.random();
-      this.y = initial ? canvas.height * Math.random() : -100;
-      this.vy = 2 + Math.random() * 8;
-      this.w = Math.random() > 0.8 ? 1 : 2 + Math.random() * 4;
-      this.h = Math.random() > 0.8 ? 100 + Math.random() * 200 : 10 + Math.random() * 40;
-      this.color = COLORS[(Math.random() * COLORS.length) | 0];
-      this.alpha = 0.2 + Math.random() * 0.4;
-      this.isLine = Math.random() > 0.7;
+  const COLORS = ['#C0533B', '#4A6B7C', '#1A1A18', '#EAE6DA'];
+
+  class Ball {
+    constructor() {
+      this.radius = 20 + Math.random() * 60;
+      this.reset();
     }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.vx = (Math.random() - 0.5) * 4;
+      this.vy = (Math.random() - 0.5) * 4;
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.alpha = 0.05 + Math.random() * 0.1;
+    }
+
     update() {
+      // Basic movement
+      this.x += this.vx;
       this.y += this.vy;
-      if (this.y > canvas.height + 200) this.reset();
+
+      // Wall bounce
+      if (this.x - this.radius < 0 || this.x + this.radius > canvas.width) this.vx *= -1;
+      if (this.y - this.radius < 0 || this.y + this.radius > canvas.height) this.vy *= -1;
+
+      // Mouse repulsion
+      const dx = mouse.x - this.x;
+      const dy = mouse.y - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const minDist = 220;
+
+      if (dist < minDist) {
+        const force = (minDist - dist) / minDist;
+        const angle = Math.atan2(dy, dx);
+        const tx = this.x - Math.cos(angle) * force * 20;
+        const ty = this.y - Math.sin(angle) * force * 20;
+        
+        this.vx += (tx - this.x) * 0.08;
+        this.vy += (ty - this.y) * 0.08;
+      }
+
+      // Friction
+      this.vx *= 0.98;
+      this.vy *= 0.98;
     }
+
     draw() {
       ctx.save();
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = this.color;
-      if (this.isLine) {
-        ctx.fillRect(this.x, this.y, 1, this.h);
-      } else {
-        ctx.fillRect(this.x, this.y, this.w, this.h);
+      
+      // 1. Shadow for depth
+      ctx.shadowColor = 'rgba(0,0,0,0.05)';
+      ctx.shadowBlur = 10;
+      
+      // 2. Radial Gradient for "Clear Glass" Effect
+      const grad = ctx.createRadialGradient(
+        this.x - this.radius * 0.3, 
+        this.y - this.radius * 0.3, 
+        this.radius * 0.1,
+        this.x, 
+        this.y, 
+        this.radius
+      );
+      
+      grad.addColorStop(0, 'rgba(255,255,255,0.4)');
+      grad.addColorStop(0.4, 'rgba(234,230,218,0.2)'); // Aged Newsprint alpha
+      grad.addColorStop(1, 'rgba(255,255,255,0.05)');
+
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+      
+      // 3. Brutalist Outline (Neutral)
+      ctx.strokeStyle = 'rgba(26,26,24,0.15)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      
+      // 4. Specular Highlight
+      ctx.beginPath();
+      ctx.arc(this.x - this.radius * 0.4, this.y - this.radius * 0.4, this.radius * 0.1, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.fill();
+      
+      // 5. Technical Label (More subtle on mobile)
+      if (this.radius > 50) {
+        ctx.globalAlpha = 0.3;
+        ctx.fillStyle = '#1A1A18';
+        ctx.font = '900 8px Inter';
+        ctx.textAlign = 'center';
+        ctx.fillText(`ID_${Math.floor(this.radius)}`, this.x, this.y + 3);
       }
+
       ctx.restore();
     }
   }
 
-  const particles = Array.from({ length: 60 }, () => new BrutalParticle());
+  const isMobile = window.innerWidth < 768;
+  const ballsCount = isMobile ? 15 : 40;
+  const balls = Array.from({ length: ballsCount }, () => new Ball());
 
-  (function loop() {
+  function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => { p.update(); p.draw(); });
+    balls.forEach(ball => {
+      ball.update();
+      ball.draw();
+    });
     requestAnimationFrame(loop);
-  })();
+  }
+  loop();
 }
 
 /* ─────────────────────────────────────────────────────── */
